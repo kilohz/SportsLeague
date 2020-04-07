@@ -29,8 +29,8 @@ const routes: Routes = [
     { path: 'team/update/:id', component: TeamUpdateComponent },
     { path: 'team/delete/:id', component: TeamDeleteComponent },
 
-    { path: 'member/add', component: MemberAddComponent },
-    { path: 'member/delete/', component: MemberDeleteComponent }
+    { path: 'member/add/:id', component: MemberAddComponent },
+    { path: 'member/delete/:teamid/:personid', component: MemberDeleteComponent }
 ];
 
 @NgModule({

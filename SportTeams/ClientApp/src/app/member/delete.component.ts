@@ -27,7 +27,7 @@ export class MemberDeleteComponent implements AfterViewInit {
         this.http.delete(this.baseUrl + 'api/member/?personId=' + this.personId + '&teamId=' + this.teamId, { headers: header }).toPromise().then(
             (result: any) => {
                 if (result.success) {
-                    this.router.navigate(['member']).then(() => {
+                    this.router.navigate(['team/update', this.teamId]).then(() => {
                         this.toastr.success(result.msg, "Delete Successful!");
                     });
                 }

@@ -29,7 +29,4 @@ interface Person {
     name: string;
     email: number;
     id: number;
-    //createdOn: Date;
-    //scores: any[];
-    //members: any[];
 }

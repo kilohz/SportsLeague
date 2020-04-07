@@ -1,7 +1,7 @@
 import { Component, Inject, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -10,29 +10,36 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MemberAddComponent implements OnInit {
 
-    CreateForm = new FormGroup({
-        Name: new FormControl('', Validators.required)
+    AddForm = new FormGroup({
+        PersonId: new FormControl('', Validators.required),
+        TeamId: new FormControl('', null)
     });
 
     Submitted = false;
+    teamId: number;
+    public people: Person[];
 
-    constructor(public http: HttpClient, @Inject('BASE_URL') public baseUrl: string, private router: Router, private toastr: ToastrService) {
+    constructor(public http: HttpClient, @Inject('BASE_URL') public baseUrl: string, private router: Router, private toastr: ToastrService,
+        private route: ActivatedRoute) {
 
     }
 
-    onSubmit(createForm: FormGroup) {
-        this.CreateForm.markAsTouched();
-        if (createForm.valid) {
-
+    onSubmit(addForm: FormGroup) {
+        this.AddForm.markAsTouched();
+        if (addForm.valid) {
             //create member
-
             let header = new HttpHeaders();
             header.append('Content-type', 'application/json');
-            this.http.post(this.baseUrl + 'api/member', createForm.value, { headers: header }).toPromise().then(
+
+            //parse form ints
+            addForm.value.PersonId = parseFloat(addForm.value.PersonId);
+            addForm.value.TeamId = parseFloat(addForm.value.TeamId);
+
+            this.http.post(this.baseUrl + 'api/member', addForm.value, { headers: header }).toPromise().then(
                 (result: any) => {
                     if (result.success) {
-                        this.CreateForm.reset();
-                        this.router.navigate(['member']).then(() => {
+                        this.AddForm.reset();
+                        this.router.navigate(['team/update', this.teamId]).then(() => {
                             this.toastr.success(result.msg, "Create Successful!");
                         });
                     }
@@ -44,8 +51,20 @@ export class MemberAddComponent implements OnInit {
         this.Submitted = true;
     }
 
-
     ngOnInit() {
-        this.CreateForm.reset();
+        this.AddForm.reset();
+        this.teamId = this.route.snapshot.params.id;
+        this.AddForm.controls["TeamId"].setValue(this.teamId);
+
+        //get list of people, team already selected
+        this.http.get<Person[]>(this.baseUrl + 'api/person').subscribe(result => {
+            this.people = result;
+        }, error => this.toastr.error("Couldn't load players.", "Load Failed!"));
     }
+}
+
+interface Person {
+    name: string;
+    email: number;
+    id: number;
 }

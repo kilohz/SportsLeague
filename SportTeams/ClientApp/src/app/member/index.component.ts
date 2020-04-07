@@ -28,6 +28,5 @@ export class MemberIndexComponent implements AfterViewInit {
 
 interface Member {
     name: string;
-    personid: number;
-    teamid: number;
+    id: number;
 }

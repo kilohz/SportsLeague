@@ -1,4 +1,4 @@
-<h1 id="tableLabel">members<a href="/member/add" class="btn-primary btn pull-right">Add</a></h1>
+<h1 id="tableLabel">members<a [routerLink]="['/member/add/'+ teamId]" class="btn-primary btn pull-right">Add</a></h1>
 
 <p *ngIf="!loaded"><em>Loading...</em></p>
 
@@ -16,7 +16,7 @@
                 <td>{{ member.name }}</td>
                 <th>TODO</th>
                 <td>
-                    <a [routerLink]="['/member/delete?personId=' + member.personId + '&teamId=' + member.teamId]">Remove</a>
+                    <a [routerLink]="['/member/delete',teamId ,member.id]">Remove</a>
                 </td>
             </tr>
         </tbody>

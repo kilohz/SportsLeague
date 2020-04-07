@@ -30,13 +30,13 @@ namespace SportMembers.Controllers
 		}
 
 		[HttpPost]
-		public Object Post([FromBody]Member Member)
+		public Object Post([FromBody]Member member)
 		{
 			try
 			{
-				_MemberService.Insert(Member);
+				_MemberService.Insert(member);
 
-				return new { success=true, msg="Created Player." };
+				return new { success = true, msg = "Added Member." };
 			}
 			catch (Exception ex)
 			{
@@ -53,7 +53,7 @@ namespace SportMembers.Controllers
 				var Member = _MemberService.GetById(personId, teamId);
 				_MemberService.Delete(Member);
 
-				return new { success = true, msg = "Created Player." };
+				return new { success = true, msg = "Removed Member." };
 			}
 			catch (Exception ex)
 			{
