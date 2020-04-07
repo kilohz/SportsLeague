@@ -1,0 +1,13 @@
+<h1 id="tableLabel">Add Member</h1>
+
+<form [formGroup]="CreateForm" (submit)="onSubmit(CreateForm)">
+
+  <div class="form-group" required>
+    <label>Name</label>
+    <input class="form-control" formControlName="Name">
+    <label class="text-danger" *ngIf="Submitted && CreateForm?.controls.Name?.errors?.required">This field is required!</label>
+  </div>
+
+  <button type="submit" class="btn btn-primary block full-width m-b">Add</button>
+  <label class="text-danger">{{ErrorMessage}}</label>
+</form>

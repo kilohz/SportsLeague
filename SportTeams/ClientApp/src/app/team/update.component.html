@@ -1,0 +1,19 @@
+<h1 id="tableLabel">Update Team</h1>
+
+<form [formGroup]="UpdateForm" (submit)="onSubmit(UpdateForm)">
+
+    <input type="hidden" formControlName="Id">
+    <input type="hidden" formControlName="CreatedOn">
+
+    <div class="form-group" required>
+        <label>Name</label>
+        <input class="form-control" formControlName="Name">
+        <label class="text-danger" *ngIf="UpdateForm?.controls.Name?.errors?.required">This field is required!</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary block full-width m-b">Update</button>
+    <label class="text-danger">{{ErrorMessage}}</label>
+
+
+    <app-member-index [teamId]="teamId"></app-member-index>
+</form>

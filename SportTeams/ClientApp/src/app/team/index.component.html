@@ -1,0 +1,24 @@
+<h1 id="tableLabel">Teams<a href="/team/add" class="btn-primary btn pull-right">Add</a></h1>
+
+
+<p *ngIf="!loaded"><em>Loading...</em></p>
+
+<div *ngIf="teams">
+    <table class='table table-striped' aria-labelledby="tableLabel">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let team of teams">
+                <td>{{ team.name }}</td>
+                <td>
+                    <a [routerLink]="['/team/update',team.id]">Update</a>
+                    | <a [routerLink]="['/team/delete',team.id]">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

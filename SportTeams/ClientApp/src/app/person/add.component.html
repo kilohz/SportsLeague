@@ -1,0 +1,26 @@
+<h1 id="tableLabel">Add Player</h1>
+
+<form [formGroup]="CreateForm" (submit)="onSubmit(CreateForm)">
+
+    <div class="form-group" required>
+        <label>Name</label>
+        <input class="form-control" formControlName="Name">
+        <label class="text-danger" *ngIf="Submitted && CreateForm?.controls.Name?.errors?.required">This field is required!</label>
+    </div>
+
+    <div class="form-group" required>
+        <label>Alias</label>
+        <input class="form-control" formControlName="Alias">
+        <label class="text-danger" *ngIf="Submitted && CreateForm?.controls.Alias?.errors?.required">This field is required!</label>
+    </div>
+
+    <div class="form-group" required>
+        <label>Email</label>
+        <input class="form-control" formControlName="Email">
+        <label class="text-danger" *ngIf="Submitted && CreateForm?.controls.Email?.errors?.required">This field is required!</label>
+        <label class="text-danger" *ngIf="Submitted && CreateForm?.controls.Email?.errors?.email">Invalid Email!</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary block full-width m-b">Add</button>
+    <label class="text-danger">{{ErrorMessage}}</label>
+</form>
