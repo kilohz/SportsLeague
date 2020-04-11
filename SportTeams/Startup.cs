@@ -10,6 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Library.Services;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Library.Data.Models;
+using Library.Data.Entities.Auth;
+using Library.Services.Email;
+using Library.Services.Auth;
 
 namespace SportTeams
 {
@@ -31,16 +39,71 @@ namespace SportTeams
 			   options.UseSqlServer(Configuration.GetConnectionString("SQLDatabase")));
 			//services.AddScoped<DatabaseContext>(sp => sp.GetRequiredService<DatabaseContext>());
 
+			services.AddDbContext<AuthentificationContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AuthDatabase")));
+			services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
+
 			//services.AddScoped<ICacheManager, MemoryCacheManager>();
 			services.AddScoped(typeof(DataRepository<>), typeof(DataRepository<>));
 
 			#endregion
 
+			#region Auth
+			services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+			services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
+			services.AddIdentity<ApplicationUser, IdentityRole<Int32>>()
+				.AddEntityFrameworkStores<AuthentificationContext>()
+				.AddRoles<IdentityRole<Int32>>()
+				.AddDefaultTokenProviders();
+
+			services.Configure<IdentityOptions>(opt =>
+			{
+				opt.Password.RequireNonAlphanumeric = false;
+				opt.SignIn.RequireConfirmedEmail = false;
+				opt.Password.RequireDigit = false;
+				opt.Password.RequiredLength = 8;
+				opt.Password.RequireLowercase = false;
+				opt.Password.RequireUppercase = false;
+			});
+			services.AddCors();
+
+			services.Configure<DataProtectionTokenProviderOptions>(o =>
+				o.TokenLifespan = TimeSpan.FromDays(7));
+
+			//Jwt Authentification
+			var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+			})
+			.AddJwtBearer(x =>
+			{
+				x.RequireHttpsMetadata = false;
+				x.SaveToken = false;
+				x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					ClockSkew = TimeSpan.Zero
+
+				};
+			});
+			#endregion
 
 			#region Services
 			services.AddScoped<PersonService, PersonService>();
 			services.AddScoped<TeamService, TeamService>();
 			services.AddScoped<MemberService, MemberService>();
+
+
+
+			services.AddScoped<IEmailService, EmailService>();
 
 
 			#endregion

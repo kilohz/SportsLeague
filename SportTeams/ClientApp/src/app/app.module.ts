@@ -12,6 +12,16 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 
+import { LoginComponent } from './auth/login.component';
+import { LogoutComponent } from './auth/logout.component';
+import { RegisterComponent } from './auth/register.component';
+import { VerifyAccountComponent } from './auth/verifyaccount.component';
+import { ForgotPasswordComponent } from './auth/forgotpassword.component';
+import { ResetPasswordComponent } from './auth/resetpassword.component';
+import { JwtInterceptor } from './auth/interceptors/JwtInterceptor';
+import { ErrorInterceptor } from './auth/interceptors/ErrorInterceptor';
+import { AuthService } from './shared/services/auth.service';
+
 import { PersonIndexComponent } from './person/index.component';
 import { PersonAddComponent } from './person/add.component';
 import { PersonUpdateComponent } from './person/update.component';
@@ -31,6 +41,13 @@ import { MemberDeleteComponent } from './member/delete.component';
         AppComponent,
         NavMenuComponent,
         HomeComponent,
+
+        LoginComponent,
+        LogoutComponent,
+        RegisterComponent,
+        VerifyAccountComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
 
         PersonIndexComponent,
         PersonAddComponent,
@@ -55,7 +72,9 @@ import { MemberDeleteComponent } from './member/delete.component';
         BrowserAnimationsModule,
         AppRoutingModule
     ],
-    providers: [],
+    providers: [ AuthService, 
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

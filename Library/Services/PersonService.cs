@@ -10,9 +10,9 @@ namespace Library.Services
 	public class PersonService
 	{
 		private DataRepository<Person> DataRepo;
-		public PersonService(DatabaseContext context)
+		public PersonService(DataRepository<Person> personRepo)
 		{
-			DataRepo = new DataRepository<Person>(context);
+			DataRepo = personRepo;
 		}
 
 		public List<Person> GetAll(int pageSize = 1000, int page = 0)

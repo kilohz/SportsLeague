@@ -7,7 +7,7 @@ using Library.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace SportMembers.Controllers
+namespace SportTeams.Controllers
 {
 	[Route("api/[controller]")]
 	public class MemberController : ControllerBase

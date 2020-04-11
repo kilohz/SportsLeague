@@ -12,10 +12,10 @@ namespace Library.Services
 		private DataRepository<Member> DataRepo;
 		private DataRepository<Person> PersonRepo;
 
-		public MemberService(DatabaseContext context)
+		public MemberService(DataRepository<Member> memberRepo, DataRepository<Person> personRepo)
 		{
-			DataRepo = new DataRepository<Member>(context);
-			PersonRepo = new DataRepository<Person>(context);
+			DataRepo = memberRepo;
+			PersonRepo = personRepo;
 		}
 
 		public List<Person> GetAll(int id, int pageSize = 1000, int page = 0)

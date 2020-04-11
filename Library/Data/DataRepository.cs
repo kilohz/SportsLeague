@@ -1,5 +1,7 @@
 ﻿using Library.Data.Entities;
+using Library.Services.Auth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,14 +15,25 @@ namespace Library.Data
 		protected DbSet<T> _set;
 		#endregion
 
+
 		#region Constructor
 		/// <summary>
 		/// Constrcuts a new instance of a data repository
 		/// </summary>
 		/// <param name="context"></param>
-		public DataRepository(DatabaseContext context)
+		public DataRepository(DatabaseContext context, IAuthenticationService authService, IConfiguration config)
 		{
 			this._db = context;
+
+			//Multitenancy Implimentation
+			var tenant = authService.GetTenantName();
+			if (!String.IsNullOrEmpty(tenant))
+			{
+				//use other conn string
+				var optionsBuilder = new Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<DatabaseContext>();
+				optionsBuilder.UseSqlServer(config.GetConnectionString(tenant));
+				_db = new DatabaseContext(optionsBuilder.Options);
+			}
 		}
 		#endregion
 

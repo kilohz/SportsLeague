@@ -10,9 +10,9 @@ namespace Library.Services
 	public class TeamService
 	{
 		private DataRepository<Team> DataRepo;
-		public TeamService(DatabaseContext context)
+		public TeamService(DataRepository<Team> repo)
 		{
-			DataRepo = new DataRepository<Team>(context);
+			DataRepo = repo;
 		}
 
 		public List<Team> GetAll(int pageSize = 1000, int page = 0)
